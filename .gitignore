@@ -1,0 +1,8 @@
+archive/*
+data/*
+*.mexmaca64
+.DS_Store
+*.pdf
+*.tex
+*.vscode
+*.idea
