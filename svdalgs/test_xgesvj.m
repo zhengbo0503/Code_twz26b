@@ -12,7 +12,7 @@ Asingle = single(A);
 V0 = eye(n);
 V0single = single(V0);
 
-[Aout,S,V,sva,work,info] = dgesvj_mex(A,'G','U','V',n,V0,max(6,m+n));
+[~,~,~,~,~,info] = dgesvj_mex(A,'G','U','V',n,V0,max(6,m+n));
 if info ~= 0
     fprintf(" -- DGESVJ failed\n");
     return
@@ -20,7 +20,7 @@ else
     fprintf(" -- DGESVJ works fine.\n");
 end
 
-[Aout,S,V,sva,work,info] = sgesvj_mex(Asingle,'G','U','V',n,V0single,max(6,m+n));
+[~,~,~,~,~,info] = sgesvj_mex(Asingle,'G','U','V',n,V0single,max(6,m+n));
 if info ~= 0
     fprintf(" -- SGESVJ failed\n");
     return
@@ -28,7 +28,7 @@ else
     fprintf(" -- SGESVJ works fine.\n");
 end
 
-[U,S,V,SVA,WORK,IWORK,info] = dgejsv_mex(A,'F','U','V','N','T','N');
+[~,~,~,~,~,~,info] = dgejsv_mex(A,'F','U','V','N','T','N');
 if info ~= 0
     fprintf(" -- DGEJSV failed\n");
     return
@@ -36,7 +36,7 @@ else
 	fprintf(" -- DGEJSV works fine.\n");    
 end
 
-[U,S,V,SVA,WORK,IWORK,info] = sgejsv_mex(Asingle,'F','U','V','N','T','N');
+[~,~,~,~,~,~,info] = sgejsv_mex(Asingle,'F','U','V','N','T','N');
 if info ~= 0
     fprintf(" -- SGEJSV failed\n");
     return

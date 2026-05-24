@@ -62,7 +62,6 @@ if (nop ~= 2) && (nop ~= 3)
     error("The number of precision (the second argument) should be 2 or 3.");
 end
 idty = eye(n);
-doqr = (m >= (11*n)/6); % Consistent with LAPACK choice. 
 
 % Compute the preconditioner
 [~,~,Vs] = svd(single(G),'econ');
