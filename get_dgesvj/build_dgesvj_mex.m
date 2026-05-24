@@ -1,6 +1,6 @@
 % build_dgesvj_mex.m  (run this script)
-openblas_lib = '/Users/cyae/OpenBLAS/lib';
-gfortran_lib = '/opt/homebrew/Cellar/gcc/15.2.0_1/lib/gcc/15';
+openblas_lib = '/Users/cyae/OpenBLAS/lib';  % EDIT THIS PATH
+gfortran_lib = '/opt/homebrew/Cellar/gcc/  % EDIT THIS PATH15.2.0_1/lib/gcc/15';
 
 mex('-v','dgesvj_mex.c', ...
     ['-L' openblas_lib], '-lopenblas', ...

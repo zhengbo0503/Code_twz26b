@@ -80,11 +80,12 @@ end
 while done_rot && NSWEEP < maxiter
     NSWEEP = NSWEEP + 1;
     done_rot = false; 
+    d = sqrt(abs(diag(A)));
     
     % Main iteration 
     for p = 1:n-1
         for q = p+1:n 
-            if abs(A(p,q)) > tol * sqrt(abs(A(p,p)*A(q,q)))
+            if abs(A(p,q)) > tol * d(p) * d(q)
                 done_rot = true;
                 NROT = NROT + 1;
 

@@ -15,6 +15,17 @@ epsln = eps('double')/2;
 mmode = 3:5;
 M = 15;
 
+% Preallocate output arrays
+N_kappa = length(kkappa);
+N_mode = length(mmode);
+err_mposj = zeros(N_kappa, N_mode);
+err_dgesvj = zeros(N_kappa, N_mode);
+err_dgejsv = zeros(N_kappa, N_mode);
+err_matlab = zeros(N_kappa, N_mode);
+relgap = zeros(N_kappa, N_mode);
+bound2 = zeros(N_kappa, N_mode);
+number_failed = zeros(N_kappa, N_mode);
+
 for i = 1:2
     mode = mmode(i);
     for j = 1:length(kkappa)
@@ -26,7 +37,8 @@ for i = 1:2
 
         % Our algorithm
         [U1,S1,V1,nos1,scnd] = mposj(A);
-        [err1, relgap1] = compute_error(A,V1,'s');
+        [Vref, Sref] = get_reference(A, 's');
+        [err1, relgap1] = compute_error(A, V1, 's', Vref, Sref);
         [err_mposj(j,i), ind] = max(err1);
         relgap(j,i) = relgap1(ind);
 
@@ -48,7 +60,7 @@ for i = 1:2
             fprintf("Error: DGESVJ does not converge.\n");
             break;
         end
-        [err2, ~ ] = compute_error(A,V2,'s');
+        [err2, ~ ] = compute_error(A, V2, 's', Vref, Sref);
         err_dgesvj(j,i) = max(err2);
 
         % preconditioned one-sided Jacobi
@@ -57,12 +69,12 @@ for i = 1:2
             fprintf("Error: DGEJSV does not converge.\n");
             break;
         end
-        [err3, ~ ] = compute_error(A,V3,'s');
+        [err3, ~ ] = compute_error(A, V3, 's', Vref, Sref);
         err_dgejsv(j,i) = max(err3);
 
         % MATLAB 
         [U4,S4,V4] = svd(A,'econ');
-        [err4, ~] = compute_error(A,V4,'s');
+        [err4, ~] = compute_error(A, V4, 's', Vref, Sref);
         err_matlab(j,i) = max(err4);
         fprintf("Finished MODE=%d, KAPPA %d of %d", mode, j, length(kkappa));
     end
@@ -87,7 +99,8 @@ for i = 3
     
             %  Apply eigensolvers
 	        [U1,S1,V1,nos1,scnd] = mposj(A);
-            [err1, relgap1] = compute_error(A,V1,'s');
+	        [Vref, Sref] = get_reference(A, 's');
+            [err1, relgap1] = compute_error(A, V1, 's', Vref, Sref);
             [tmp, ind] = max(err1);
             err_mposj(j,i) = max(err_mposj(j,i), tmp);
             if err_mposj(j,i) == tmp
@@ -112,7 +125,7 @@ for i = 3
                 fprintf("Error: DGESVJ does not converge.\n");
                 break;
             end
-            [err2, ~ ] = compute_error(A,V2,'s');
+            [err2, ~ ] = compute_error(A, V2, 's', Vref, Sref);
             err_dgesvj(j,i) = max(max(err2),err_dgesvj(j,i)); 
     
             % Preconditioned one-sided Jacobi
@@ -121,12 +134,12 @@ for i = 3
                 fprintf("Error: DGEJSV does not converge.\n");
                 break;
             end
-            [err3, ~ ] = compute_error(A,V3,'s');
+            [err3, ~ ] = compute_error(A, V3, 's', Vref, Sref);
             err_dgejsv(j,i) = max(max(err3),err_dgejsv(j,i));
     
             % MATLAB
             [U4,S4,V4] = svd(A,'econ');
-            [err4, ~] = compute_error(A,V4,'s');
+            [err4, ~] = compute_error(A, V4, 's', Vref, Sref);
             err_matlab(j,i) = max(max(err4),err_matlab(j,i));
             fprintf("M = %d\n", k); 
         end
@@ -137,7 +150,7 @@ for i = 3
 end
 
 %%
-savedata = 1;
+savedata = 0;
 if savedata
     save("data/test1.mat");
 end
@@ -181,8 +194,9 @@ end
 
 
 %%
-printout = 1;
+printout = 0;
 if printout
     cleanfigure;
+    % EDIT THIS PATH to your own output directory
     matlab2tikz('/Users/cyae/Dropbox/tex/mp_jacobi_evecs_svecs/figs/tmp.tex');
 end

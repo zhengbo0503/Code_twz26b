@@ -8,29 +8,29 @@ function [U,S,V,nos,scalecond] = mposj(G, nop)
 %       [U,S,V,nos,scalecond,timing] = mposj(G)
 %       [U,S,V] = mposj(G, nop)
 %
-%   Purpose: 
+%   Purpose:
 %       MPOSJ computes a SVD of a general matrix based on LAPACK routine
-%       DGESVJ, the one-sided Jacobi SVD algorithm. 
+%       DGESVJ, the one-sided Jacobi SVD algorithm.
 %       MPOSJ first computes a preconditioner at single precision, applies
 %       the preconditioner at double or quadruple precision, and finally
-%       performs DGESVJ on the preconditioned matrix at double precision. 
+%       performs DGESVJ on the preconditioned matrix at double precision.
 %
 %		For ill-conditioned matrix, MPOSJ can compute singular values with
 %       smaller relative forward error compared to MATLAB function svd.
 %
-%   Arguments: 
+%   Arguments:
 %       (1) G - Real, double matrix.
 %       (2) nop - Integer, and by default 3.
 %           If nop = 3, MPOSJ will use quadruple precision to apply the
 %           preconditioner; If nop = 2, MPOSJ will use double precision
-%           instead. 
-%   
+%           instead.
+%
 %   Outputs:
 %       (1) U,S,V - Real, double matrix.
 %           Suppose G is mxn, then U is mxn whose columns are numerically
 %           orthonormal, S is a nxn diagonal matrix whose diagonal entries
 %           are singular values of G, and V is a nxn numerically orthogonal
-%           matrix. 
+%           matrix.
 %       (2) nos - Integer.
 %           Number of sweep used by DGESVJ.
 %       (3) scalecond - Real, double.
@@ -49,7 +49,7 @@ function [U,S,V,nos,scalecond] = mposj(G, nop)
 
 
 [m,n] = size(G);
-if m < n   
+if m < n
     [Vt,St,Ut,nos,scalecond] = mposj(G');
     U = Ut; S = St; V = Vt;
     return
@@ -69,36 +69,20 @@ idty = eye(n);
 
 % Apply the preconditioner
 if nop == 3
-    Gmp = mp(G); 
-    Vdmp = mp(Vd); 
-    Gt = Gmp*Vdmp; 
-    Gt = double(Gt); 
+    Gmp = mp(G);
+    Vdmp = mp(Vd);
+    Gt = Gmp*Vdmp;
+    Gt = double(Gt);
 else
-    Gt = G*Vd; 
+    Gt = G*Vd;
 end
 
-% Output scaled condition number for posterior analysis. 
+% Output scaled condition number for posterior analysis.
 if nargout >= 5
-    scalecond = scond(Gt); 
+    scalecond = scond(Gt);
 end
 
-% Apply the one-sided Jacobi 
-
-% if doqr % Apply QR factorization before doing Jacobi SVD
-%     disp('QR Here');
-%     [Qgt,Rt] = qr(Gt,'econ');
-%     optlwork = max(6,m+n);
-%     work = zeros(optlwork,1);
-%     [V,S,U,~,work,info] = dgesvj_mex(Rt','L','U','V',n,idty,optlwork,work);
-%     nos = work(4);
-%     U = Qgt*U;
-% else % Plain Jacobi SVD
-%     disp('Here');
-%     optlwork = max(6,m+n);
-%     work = zeros(optlwork,1);
-%     [V,S,U,~,work,info] = dgesvj_mex(Gt','G','U','V',n,idty,optlwork,work);
-%     nos = work(4);
-% end
+% Apply the one-sided Jacobi
 
 [Qgt,Rt] = qr(Gt,'econ');
 optlwork = max(6,m+n);

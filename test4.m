@@ -12,7 +12,18 @@ nn = round(logspace(1,3,15));
 u = eps('double')/2;
 kkappa = 1e8*ones(1,length(nn));
 mmode = [3,4,5];
-M = 15; 
+M = 15;
+
+% Preallocate output arrays
+N_n = length(nn);
+N_mode = length(mmode);
+err_mpjacobi = zeros(N_n, N_mode);
+err_jacobi = zeros(N_n, N_mode);
+err_pjacobi = zeros(N_n, N_mode);
+err_matlab = zeros(N_n, N_mode);
+relgap = zeros(N_n, N_mode);
+bound2 = zeros(N_n, N_mode);
+number_failed = zeros(N_n, N_mode);
 
 for i = 1:2
     % Main
@@ -28,7 +39,8 @@ for i = 1:2
 
         %  Apply eigensolvers
 	    [V1,D1,~,~,~,scnd] = mp_pjacobi(A,'mp3');
-        [err1, relgap1] = compute_error(A,V1,'E');
+	    [Vref, Sref] = get_reference(A, 'E');
+        [err1, relgap1] = compute_error(A, V1, 'E', Vref, Sref);
         [err_mpjacobi(j,i), ind] = max(err1);
         relgap(j,i) = relgap1(ind);
         
@@ -46,17 +58,17 @@ for i = 1:2
 
         % Standard two-sided Jacobi 
         [V2,D2] = cjacobi(A);
-        [err2, ~ ] = compute_error(A,V2,'E');
+        [err2, ~ ] = compute_error(A, V2, 'E', Vref, Sref);
         err_jacobi(j,i) = max(err2);
 
         % Preconditioned two-sided Jacobi
         [V3,D3] = mp_pjacobi(A,'mp2');
-        [err3, ~ ] = compute_error(A,V3,'E');
+        [err3, ~ ] = compute_error(A, V3, 'E', Vref, Sref);
         err_pjacobi(j,i) = max(err3);
 
         % MATLAB
         [V4,D4] = eigsort(A);    
-        [err4, ~ ] = compute_error(A,V4,'E');
+        [err4, ~ ] = compute_error(A, V4, 'E', Vref, Sref);
         err_matlab(j,i) = max(err4);
 
         % Print info 
@@ -82,7 +94,8 @@ for i = 3
     
             %  Apply eigensolvers
 	        [V1,D1,~,~,~,scnd] = mp_pjacobi(A,'mp3');
-            [err1, relgap1] = compute_error(A,V1,'E');
+	        [Vref, Sref] = get_reference(A, 'E');
+            [err1, relgap1] = compute_error(A, V1, 'E', Vref, Sref);
             [tmp, ind] = max(err1);
             err_mpjacobi(j,i) = max(err_mpjacobi(j,i), tmp);
             if err_mpjacobi(j,i) == tmp
@@ -103,17 +116,17 @@ for i = 3
     
             % Standard two-sided Jacobi 
             [V2,D2] = cjacobi(A);
-            [err2, ~ ] = compute_error(A,V2,'E');
+            [err2, ~ ] = compute_error(A, V2, 'E', Vref, Sref);
             err_jacobi(j,i) = max(max(err2),err_jacobi(j,i));
     
             % Preconditioned two-sided Jacobi
             [V3,D3] = mp_pjacobi(A,'mp2');
-            [err3, ~ ] = compute_error(A,V3,'E');
+            [err3, ~ ] = compute_error(A, V3, 'E', Vref, Sref);
             err_pjacobi(j,i) = max(max(err3),err_pjacobi(j,i));
     
             % MATLAB
             [V4,D4] = eigsort(A);    
-            [err4, ~ ] = compute_error(A,V4,'E');
+            [err4, ~ ] = compute_error(A, V4, 'E', Vref, Sref);
             err_matlab(j,i) = max(max(err4),err_matlab(j,i));
         end
 
@@ -125,7 +138,7 @@ end
 beep;
 
 %%
-savedata = 1;
+savedata = 0;
 if savedata
     save("data/test4.mat");
 end
@@ -152,7 +165,7 @@ if drawgraph
         xlim([1e1,1e3]);
         
         if mod(mode,2) == 1
-            ylabel("max svec err");
+            ylabel("max evec err");
         end
     
         if mode == 3
@@ -166,8 +179,9 @@ if drawgraph
 end
 
 %%
-printout = 1;
+printout = 0;
 if printout 
     cleanfigure;
+    % EDIT THIS PATH to your own output directory
     matlab2tikz('/Users/cyae/Dropbox/tex/mp_jacobi_evecs_svecs/figs/tmp.tex');
 end

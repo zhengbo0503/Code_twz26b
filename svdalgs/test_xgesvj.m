@@ -44,5 +44,4 @@ else
     fprintf(" -- SGEJSV works fine.\n");
 end
 
-clear all;
 end
