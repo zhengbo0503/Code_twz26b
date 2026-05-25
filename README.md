@@ -1,14 +1,15 @@
-# Code for "Mixed-Precision Jacobi algorithms for SVD and EVD"
+# Code for "Mixed-Precision Jacobi Algorithms for SVD and EVD"
 
-Supplementary code for the preprint. Implements mixed-precision preconditioned Jacobi algorithms that compute singular values/vectors and eigenvalues/vectors with higher accuracy than MATLAB's built-in `svd` and `eig` for ill-conditioned matrices.
+Supplementary code for the preprint. Implements mixed-precision preconditioned Jacobi algorithms that compute singular values and vectors, and eigenvalues and vectors, to higher accuracy than MATLAB's built-in `svd` and `eig` for ill-conditioned matrices.
 
 ## Dependencies
 
 - **MATLAB R2025b** (or later)
-- **[Advanpix Multiprecision Toolbox](https://www.advanpix.com/)** — required for `mp` (quadruple-precision arithmetic) and for computing reference solutions in `compute_error`/`get_reference`
-- **OpenBLAS** and **gfortran** — only needed if rebuilding MEX files (precompiled `.mexmaca64` binaries for Apple Silicon are included)
+- **[Advanpix Multiprecision Toolbox](https://www.advanpix.com/)** — required for `mp` (quadruple-precision arithmetic) and for computing reference solutions in `compute_error` and `get_reference`
+- **OpenBLAS** and **gfortran** — only needed if rebuilding MEX files; precompiled `.mexmaca64` binaries for Apple Silicon are included
 
 Optional (for figure export):
+
 - `matlab2tikz`
 - `cleanfigure`
 
@@ -33,19 +34,19 @@ addpath("svdalgs");
 
 | Script | Description |
 |--------|-------------|
-| `test1` | SVD accuracy vs. condition number |
-| `test2` | SVD accuracy vs. matrix column count |
-| `test3` | EVD accuracy vs. condition number |
-| `test4` | EVD accuracy vs. matrix size |
-| `test5` | SVD accuracy on special matrices (KMS, Lehmer) |
-| `test6` | EVD accuracy on special matrices (KMS, Lehmer) |
-| `test7` | Eigenvalue gap analysis for SPD matrices |
+| `test1` | SVD: right singular vectors, varying condition number |
+| `test2` | SVD: right singular vectors, varying column count |
+| `test3` | EVD: eigenvectors, varying condition number |
+| `test4` | EVD: eigenvectors, varying matrix size |
+| `test5` | SVD: special test matrices (KMS, Lehmer) |
+| `test6` | EVD: special test matrices (KMS, Lehmer) |
+| `test7` | SVD: left singular vectors, varying condition number |
 
-Run `mytest` to execute test1 through test4 in sequence.
+Run `mytest` to execute tests 1 through 4 in sequence.
 
 ### Rebuilding MEX files
 
-Precompiled `.mexmaca64` binaries are provided in `svdalgs/`. If you need to rebuild (e.g., different MATLAB version or architecture), edit the paths in each `get_*/build_*_mex.m` to point to your OpenBLAS and gfortran installations, then run the build script.
+Precompiled `.mexmaca64` binaries are provided in `svdalgs/`. To rebuild for a different MATLAB version or architecture, edit the paths in each `get_*/build_*_mex.m` to point to your local OpenBLAS and gfortran installations, then run the build script.
 
 ## Tested environment
 
@@ -57,5 +58,5 @@ MATLAB: R2025b Update 1
 
 ## Notes
 
-- Hardcoded paths in `matlab2tikz` calls (test1–5) and MEX build scripts are marked with `% EDIT THIS PATH` — change these to match your system.
-- `test1`–`test4` use `beep` and `pause()` when computed errors exceed theoretical bounds. Remove these lines for unattended execution.
+- Hardcoded paths in `matlab2tikz` calls (tests 1–7) and MEX build scripts are marked with `% EDIT THIS PATH` — adjust these to match your system.
+- Tests 1–4 and 7 use `beep` and `pause()` when computed errors exceed theoretical bounds. Remove these lines for unattended execution.
