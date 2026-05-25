@@ -1,9 +1,10 @@
 function [err,relgap] = compute_error(A, V, Vtype, Vref, S)
 %COMPUTE_ERROR compute the error of the computed singular/eigen-vector
 %	Given a matrix A in mxn
-%	Given a right singular vector or eigenvector V in nxn.
+%	Given singular/eigen-vectors V.
 %	Given a char Vtype that is either
-%		- 'S': singular vectors
+%		- 'S': right singular vectors
+%		- 'L': left singular vectors
 %		- 'E': eigenvectors
 %	The function computes the error in terms  of
 %		sin(angle( v(A,k), v(:,k) ))
@@ -31,6 +32,10 @@ else
       case {'S', 's'}
         [~,Smp,Vmp] = svd(Amp,'econ');
         S = diag(Smp);
+      case {'L', 'l'}
+        [Ump,Smp,~] = svd(Amp,'econ');
+        Vmp = Ump;
+        S = diag(Smp);
       case {'E', 'e'}
         [Vmp,Dmp] = eigsort(Amp);
         S = diag(Dmp);
@@ -43,7 +48,7 @@ err = zeros(1, n);
 relgap = zeros(1, n);
 
 switch Vtype
-  case {'S', 's'}
+  case {'S', 's', 'L', 'l'}
     for i = 1:n
         x = Vmp(:,i);
         y = V(:,i);
