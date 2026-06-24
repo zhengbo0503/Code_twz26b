@@ -66,3 +66,10 @@ for id = 1:2
     
 end
 
+%%
+printout = 0;
+if printout 
+    cleanfigure;
+    % EDIT THIS PATH to your own output directory
+    matlab2tikz('tmp.tex');
+end

@@ -78,5 +78,5 @@ printout = 0;
 if printout 
     cleanfigure;
     % EDIT THIS PATH to your own output directory
-    matlab2tikz('/Users/cyae/Dropbox/tex/mp_jacobi_evecs_svecs/figs/tmp.tex');
+    matlab2tikz('tmp.tex');
 end

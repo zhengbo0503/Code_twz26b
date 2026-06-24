@@ -50,7 +50,7 @@ for i = 1:2
         number_failed(j,i) = sum( err1 > bound_tmp );
         disp(number_failed(j,i));
         if number_failed(j,i) ~= 0
-            beep;
+            disp("Error exceed predefined bound");
             pause();
         end
 
@@ -115,8 +115,8 @@ for i = 3
             number_failed(j,i) = sum( err1 > bound_tmp );
             disp(number_failed(j,i));
             if number_failed(j,i) ~= 0
-                beep;
-                return;
+                disp("Error exceed predefined bound");
+                pause();
             end
 
             % one-sided Jacobi
@@ -150,7 +150,7 @@ for i = 3
 end
 
 %%
-savedata = 1;
+savedata = 0;
 if savedata
     save("data/test7.mat");
 end
@@ -194,7 +194,7 @@ end
 
 
 %%
-printout = 1;
+printout = 0;
 if printout
     cleanfigure;
     % EDIT THIS PATH to your own output directory

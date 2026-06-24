@@ -52,7 +52,7 @@ for i = 1:2
         number_failed(j,i) = sum( err1 > bound_tmp );
         disp(number_failed(j,i));
         if number_failed(j,i) ~= 0
-            beep;
+            disp("Error exceed predefined bound");
             pause();
         end
 
@@ -110,7 +110,7 @@ for i = 3
             number_failed(j,i) = sum( err1 > bound_tmp );
             disp(number_failed(j,i));
             if number_failed(j,i) ~= 0
-                beep;
+                disp("Error exceed predefined bound");
                 pause();
             end
     
@@ -135,9 +135,8 @@ for i = 3
     end
 end
 
-beep;
-
 %%
+
 savedata = 0;
 if savedata
     save("data/test4.mat");
@@ -183,5 +182,5 @@ printout = 0;
 if printout 
     cleanfigure;
     % EDIT THIS PATH to your own output directory
-    matlab2tikz('/Users/cyae/Dropbox/tex/mp_jacobi_evecs_svecs/figs/tmp.tex');
+    matlab2tikz('tmp.tex');
 end
