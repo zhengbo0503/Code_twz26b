@@ -53,14 +53,14 @@ addpath("svdalgs");
 | `test7` | SVD: left singular vectors, varying condition number  |
 
 ## Functions 
-| Function      | Description                                                              |
-| ------------- | ------------------------------------------------------------------------ |
-| mposj         | Mixed-precision one-sided Jacobi algorithm (quadruple + double + single) |
-| mposj_ssd     | Mixed-precision one-sided Jacobi algorithm (single + double)             |
-| cjacobi       | Two-sided Jacobi algorithm (double)                                      |
-| mp_pjacobi    | Mixed-precision two-sided Jacobi algorithm (quadruple + double + single) |
-| eigsort       | MATLAB `eig` with eigenvalues sorted in descending order                 |
-| compute_error | Compute the error between computed and exact singular/eigenvectors       |
+| Function        | Description                                                              |
+| --------------- | ------------------------------------------------------------------------ |
+| `mposj`         | Mixed-precision one-sided Jacobi algorithm (quadruple + double + single) |
+| `mposj_ssd`     | Mixed-precision one-sided Jacobi algorithm (single + double)             |
+| `cjacobi`       | Two-sided Jacobi algorithm (double)                                      |
+| `mp_pjacobi`    | Mixed-precision two-sided Jacobi algorithm (quadruple + double + single) |
+| `eigsort`       | MATLAB `eig` with eigenvalues sorted in descending order                 |
+| `compute_error` | Compute the error between computed and exact singular/eigenvectors       |
 
 ## Rebuilding MEX files
 
